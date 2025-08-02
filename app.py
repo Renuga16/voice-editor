@@ -2,9 +2,8 @@ import streamlit as st
 import speech_recognition as sr
 import spacy
 import os
-import language_tool_python
 from textblob import TextBlob
-from deep_translator import GoogleTranslator  # Replaced googletrans
+from googletrans import Translator
 
 # Load spaCy English model
 try:
@@ -15,8 +14,8 @@ except OSError:
     st.error("Run: python -m spacy download en_core_web_sm")
 
 # Initialize tools
-tool = language_tool_python.LanguageTool('en-US')
 recognizer = sr.Recognizer()
+translator = Translator()
 
 # Recognize speech
 def recognize_speech_from_mic(language_code="en-US"):
@@ -61,13 +60,7 @@ def pos_tagging(text):
     doc = nlp(text)
     return [f"{token.text} -> {token.pos_}" for token in doc]
 
-# Grammar correction
-def correct_grammar(text):
-    matches = tool.check(text)
-    corrected = language_tool_python.utils.correct(text, matches)
-    return corrected, matches
-
-# Sentiment analysis with tone
+# Sentiment analysis
 def analyze_sentiment(text):
     blob = TextBlob(text)
     polarity = blob.sentiment.polarity
@@ -85,8 +78,8 @@ def analyze_sentiment(text):
 # Translate text
 def translate_text(text, dest_lang_code):
     try:
-        translated = GoogleTranslator(target=dest_lang_code).translate(text)
-        return translated
+        translated = translator.translate(text, dest=dest_lang_code)
+        return translated.text
     except Exception as e:
         st.error(f"Translation failed: {e}")
         return text
@@ -164,13 +157,6 @@ with st.sidebar:
             st.warning("File not found.")
 
     st.subheader("📚 NLP Tools")
-    if st.button("Check Grammar"):
-        if st.session_state.text.strip():
-            corrected, issues = correct_grammar(st.session_state.text)
-            st.session_state.text = corrected
-            st.success(f"Grammar corrected. Issues found: {len(issues)}")
-        else:
-            st.warning("Text is empty.")
 
     if st.button("Analyze Sentiment"):
         if st.session_state.text.strip():
