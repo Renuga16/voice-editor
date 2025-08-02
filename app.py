@@ -4,7 +4,7 @@ import spacy
 import os
 import language_tool_python
 from textblob import TextBlob
-from googletrans import Translator
+from deep_translator import GoogleTranslator  # Replaced googletrans
 
 # Load spaCy English model
 try:
@@ -17,7 +17,6 @@ except OSError:
 # Initialize tools
 tool = language_tool_python.LanguageTool('en-US')
 recognizer = sr.Recognizer()
-translator = Translator()
 
 # Recognize speech
 def recognize_speech_from_mic(language_code="en-US"):
@@ -86,8 +85,8 @@ def analyze_sentiment(text):
 # Translate text
 def translate_text(text, dest_lang_code):
     try:
-        translated = translator.translate(text, dest=dest_lang_code)
-        return translated.text
+        translated = GoogleTranslator(target=dest_lang_code).translate(text)
+        return translated
     except Exception as e:
         st.error(f"Translation failed: {e}")
         return text
