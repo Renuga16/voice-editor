@@ -1,7 +1,6 @@
 streamlit
 speechrecognition
 spacy
-language-tool-python
 textblob
-deep-translator
-
+googletrans==4.0.0-rc1
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1.tar.gz
