@@ -1,6 +1,7 @@
 streamlit
 speechrecognition
 spacy
-language_tool_python
+language-tool-python
 textblob
-googletrans==4.0.0rc1
+deep-translator
+
